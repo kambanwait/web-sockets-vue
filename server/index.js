@@ -4,7 +4,7 @@ const server = new WebSocket.Server({ port: 8082 })
 // array of connected sockets
 let sockets = []
 // socket = single connection
-// server = web socket server
+// server = WebSocket server
 server.on('connection', webSocket => {
   console.log('new client connected')
   sockets.push(webSocket)
