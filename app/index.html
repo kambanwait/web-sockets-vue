@@ -39,24 +39,22 @@
         event.preventDefault();
         const messageValue = getMessageValue()
 
+        // if message value is not defined or empty, send the message to server
         if (messageValue !== undefined) {
-          console.log(messageValue)
+          // when connected we send a message to the WebSocket server
+          client.send(JSON.stringify({
+            event: 'MESSAGE_SENT',
+            payload: {
+              msg: messageValue
+            }
+          }))
         }
-
       });
 
 
       client.addEventListener(('open'), () => {
         // logout when connected
         console.info('WebSocket connected')
-
-        // when connected we send a message to the WebSocket server
-        client.send(JSON.stringify({
-          event: 'MESSAGE_SENT',
-          payload: {
-            msg: 'this is a message from a client'
-          }
-        }))
       })
 
       // WebSocket server sends a message to connected clients
