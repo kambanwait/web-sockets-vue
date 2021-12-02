@@ -11,6 +11,11 @@
 
   <script>
     const client = new WebSocket('ws://localhost:8082')
+    // logs out messages sent from the websocket server in to the console
+    client.addEventListener(('message'), event => {
+      console.log(event.data)
+    })
+
   </script>
 
 </body>
