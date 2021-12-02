@@ -1,7 +1,6 @@
 const WebSocket = require ('ws')
 const server = new WebSocket.Server({ port: 8082 })
 
-
 /**
  * Validates and parses an incoming message to ensure it's in the form of JSON we require
  * @param {Object} message A message received from the client
@@ -19,14 +18,14 @@ function parseMessage(message) {
     throw new Error('payload property not provided!')
   }
 
-
   return object
 }
 
 // array of connected sockets
 let sockets = []
-// socket = single connection
+
 // server = WebSocket server
+// WebSocket = client connection
 server.on('connection', webSocket => {
   console.log('new client connected')
   sockets.push(webSocket)
@@ -44,13 +43,15 @@ server.on('connection', webSocket => {
       // send the message content to each connected client
       sockets.forEach(socket => socket.send(data.payload.msg))
     } catch (err) {
+      // provide informative error to front-end
       console.error(`Error: something was wrong with the message object: ${err.message}`)
     }
 
   })
 
+  // setup an interval to send random number to attached clients
   const interval = setInterval(() => {
-    console.log('sending new random number')
+    console.info('sending new random number')
     webSocket.send(Math.ceil(Math.random() * 200))
   }, 2500)
 
