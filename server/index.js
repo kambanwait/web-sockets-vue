@@ -33,11 +33,19 @@ server.on('connection', webSocket => {
 
   // when we receive a message, send that to every socket
   webSocket.on('message', message => {
-    // extract the message content
-    const messageContent = JSON.parse(message)
+    // set up empty data, to be updated with message copy
+    let data
 
-    // send the message content to each connected client
-    sockets.forEach(socket => socket.send(messageContent.payload.msg))
+    // simple try catch for checking the message sent in
+    // if parseMessage is successful then we send the message to all clients
+    try {
+      // check out message received is valid
+      data = parseMessage(message)
+      // send the message content to each connected client
+      sockets.forEach(socket => socket.send(data.payload.msg))
+    } catch (err) {
+      console.error(`Error: something was wrong with the message object: ${err.message}`)
+    }
 
   })
 
