@@ -11,9 +11,12 @@ server.on('connection', webSocket => {
 
   // when we receive a message, send that to every socket
   webSocket.on('message', message => {
-
+    // extract the message content
     const messageContent = JSON.parse(message)
-    console.log(messageContent.payload.msg)
+
+    // send the message content to each connected client
+    sockets.forEach(socket => socket.send(messageContent.payload.msg))
+
   })
 
   const interval = setInterval(() => {
