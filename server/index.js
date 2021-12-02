@@ -9,6 +9,10 @@ server.on('connection', webSocket => {
   console.log('new client connected')
   sockets.push(webSocket)
 
+  // when we receive a message, send that to every socket
+  webSocket.on('message', message => {
+  })
+
   const interval = setInterval(() => {
     console.log('sending new random number')
     webSocket.send(Math.ceil(Math.random() * 200))
