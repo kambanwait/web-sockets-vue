@@ -11,6 +11,7 @@ server.on('connection', webSocket => {
 
   // when we receive a message, send that to every socket
   webSocket.on('message', message => {
+    console.log(`this is the message JSON sent from app index: ${message}`)
   })
 
   const interval = setInterval(() => {
