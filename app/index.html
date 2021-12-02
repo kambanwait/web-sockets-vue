@@ -11,10 +11,20 @@
 
   <script>
     const client = new WebSocket('ws://localhost:8082')
+
     client.addEventListener(('open'), () => {
       // logout when connected
       console.info('WebSocket connected')
+
+      // when connected we send a message to the WebSocket server
+      client.send(JSON.stringify({
+        event: 'MESSAGE_SENT',
+        payload: {
+          msg: 'this is a message from a client'
+        }
+      }))
     })
+
     // WebSocket server sends a message to connected clients
     // we log received message to console
     client.addEventListener(('message'), event => {
