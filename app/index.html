@@ -20,17 +20,30 @@
       </form>
     </section>
 
+    <section>
+      <ul id="messagesFromWS">
+      </ul>
+    </section>
+
   </main>
 
   <script defer>
     const client = new WebSocket('ws://localhost:8082')
     const form = document.getElementById("wsForm");
     const message = document.getElementById('websocketMessage')
+    let messagesList = document.getElementById('messagesFromWS')
 
-    function getMessageValue() {
+    function getMessageValue () {
       if (message.value){
         return message.value
       }
+    }
+
+    function updateMessages (message) {
+      let messagesLI = ''
+      messagesLI += `<li>${message}</li>`
+
+      messagesList.innerHTML += messagesLI
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -48,6 +61,7 @@
               msg: messageValue
             }
           }))
+          message.value = ''
         }
       });
 
@@ -60,7 +74,7 @@
       // WebSocket server sends a message to connected clients
       // we log received message to console
       client.addEventListener(('message'), event => {
-        console.log(event.data)
+        updateMessages(event.data)
       })
     })
 
