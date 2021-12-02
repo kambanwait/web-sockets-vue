@@ -1,6 +1,28 @@
 const WebSocket = require ('ws')
 const server = new WebSocket.Server({ port: 8082 })
 
+
+/**
+ * Validates and parses an incoming message to ensure it's in the form of JSON we require
+ * @param {Object} message A message received from the client
+ * @returns {{event: string, payload: object}}
+ * @throws throws an error if message is invalid
+ */
+function parseMessage(message) {
+  let object = JSON.parse(message)
+
+  if (!('event' in object)) {
+    throw new Error('event property not provided!')
+  }
+
+  if (!('payload' in object)) {
+    throw new Error('payload property not provided!')
+  }
+
+
+  return object
+}
+
 // array of connected sockets
 let sockets = []
 // socket = single connection
