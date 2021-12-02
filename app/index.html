@@ -24,24 +24,46 @@
 
   <script defer>
     const client = new WebSocket('ws://localhost:8082')
+    const form = document.getElementById("wsForm");
+    const message = document.getElementById('websocketMessage')
 
-    client.addEventListener(('open'), () => {
-      // logout when connected
-      console.info('WebSocket connected')
+    function getMessageValue() {
+      if (message.value){
+        return message.value
+      }
+    }
 
-      // when connected we send a message to the WebSocket server
-      client.send(JSON.stringify({
-        event: 'MESSAGE_SENT',
-        payload: {
-          msg: 'this is a message from a client'
+    document.addEventListener('DOMContentLoaded', function() {
+
+      form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const messageValue = getMessageValue()
+
+        if (messageValue !== undefined) {
+          console.log(messageValue)
         }
-      }))
-    })
 
-    // WebSocket server sends a message to connected clients
-    // we log received message to console
-    client.addEventListener(('message'), event => {
-      console.log(event.data)
+      });
+
+
+      client.addEventListener(('open'), () => {
+        // logout when connected
+        console.info('WebSocket connected')
+
+        // when connected we send a message to the WebSocket server
+        client.send(JSON.stringify({
+          event: 'MESSAGE_SENT',
+          payload: {
+            msg: 'this is a message from a client'
+          }
+        }))
+      })
+
+      // WebSocket server sends a message to connected clients
+      // we log received message to console
+      client.addEventListener(('message'), event => {
+        console.log(event.data)
+      })
     })
 
   </script>
