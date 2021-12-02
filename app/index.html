@@ -9,7 +9,20 @@
 </head>
 <body>
 
-  <script>
+  <main>
+
+    <section>
+      <form id="wsForm">
+        <label >Start sending messages:
+          <input id="websocketMessage" type="text" class="userInput" >
+        </label>
+        <button type="submit">Send message</button>
+      </form>
+    </section>
+
+  </main>
+
+  <script defer>
     const client = new WebSocket('ws://localhost:8082')
 
     client.addEventListener(('open'), () => {
