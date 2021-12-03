@@ -67,7 +67,16 @@ wsServer.on('connection', webSocket => {
 })
 
 // 'server' is a vanilla Node.js HTTP server, so use the same ws
-const server = app.listen(8082);
+const server = app.listen(process.env.PORT || 8082, () => console.log('server is running...'));
+
+app.use(express.static('app'))
+
+app.get('/', function (req, res) {})
+
+app.get('*', function (req, res) {
+  res.send('<h1>Can not find the page you are looking for 😭</h1>')
+})
+
 server.on('upgrade', (request, socket, head) => {
   wsServer.handleUpgrade(request, socket, head, socket => {
     wsServer.emit('connection', socket, request)
