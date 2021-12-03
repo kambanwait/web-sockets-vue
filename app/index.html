@@ -28,7 +28,8 @@
   </main>
 
   <script defer>
-    const client = new WebSocket('ws://localhost:8082')
+    const HOST = location.origin.replace(/^http/, 'ws')
+    const client = new WebSocket(HOST)
 
     const form = document.getElementById("wsForm");
     const message = document.getElementById('websocketMessage')
