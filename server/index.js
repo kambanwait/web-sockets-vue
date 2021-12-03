@@ -1,5 +1,8 @@
+const express = require('express')
 const WebSocket = require ('ws')
-const server = new WebSocket.Server({ port: 8082 })
+const app = express()
+// sets up a headless WebSocket server that prints any events that come in
+const wsServer = new WebSocket.Server({ noServer: true })
 
 /**
  * Validates and parses an incoming message to ensure it's in the form of JSON we require
@@ -26,8 +29,8 @@ let sockets = []
 
 // server = WebSocket server
 // WebSocket = client connection
-server.on('connection', webSocket => {
-  console.log('new client connected')
+wsServer.on('connection', webSocket => {
+  console.info('new client connected')
   sockets.push(webSocket)
 
   // when we receive a message, send that to every socket
@@ -46,7 +49,6 @@ server.on('connection', webSocket => {
       // provide informative error to front-end
       console.error(`Error: something was wrong with the message object: ${err.message}`)
     }
-
   })
 
   // setup an interval to send random number to attached clients
@@ -57,9 +59,17 @@ server.on('connection', webSocket => {
 
   // when socket closes or disconnects, remove it from the array
   webSocket.on('close', () => {
-    console.log('close')
+    console.info(`Closed a client connection: ${webSocket}`)
     // clearInterval(interval)
     sockets = sockets.filter(s => s !== webSocket)
   })
 
+})
+
+// 'server' is a vanilla Node.js HTTP server, so use the same ws
+const server = app.listen(8082);
+server.on('upgrade', (request, socket, head) => {
+  wsServer.handleUpgrade(request, socket, head, socket => {
+    wsServer.emit('connection', socket, request)
+  })
 })
