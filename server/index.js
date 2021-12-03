@@ -6,7 +6,7 @@ const wsServer = new WebSocket.Server({ noServer: true })
 
 /**
  * Validates and parses an incoming message to ensure it's in the form of JSON we require
- * @param {Object} message A message received from the client
+ * @param {String} message A message received from the client
  * @returns {{event: string, payload: object}}
  * @throws throws an error if message is invalid
  */
