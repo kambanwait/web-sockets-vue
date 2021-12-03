@@ -35,17 +35,17 @@
     const message = document.getElementById('websocketMessage')
     let messagesList = document.getElementById('messagesFromWS')
 
-    function getMessageValue () {
+    getMessageValue = () => {
       if (message.value){
         return message.value
       }
     }
 
-    function updateMessages (message) {
+    updateMessages = (message) => {
       messagesList.innerHTML += `<li>${message}</li>`
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
 
       form.addEventListener("submit", function(event) {
         event.preventDefault();
@@ -64,7 +64,6 @@
           message.value = ''
         }
       });
-
 
       client.addEventListener(('open'), () => {
         // logout when connected
