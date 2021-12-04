@@ -94,11 +94,6 @@
         }
       });
 
-      client.addEventListener(('open'), () => {
-        // logout when connected
-        console.info('WebSocket connected')
-      })
-
       // WebSocket server sends a message to connected clients
       // we log received message to console
       client.addEventListener(('message'), event => {
