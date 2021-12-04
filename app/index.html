@@ -43,6 +43,28 @@
     const message = document.getElementById('websocketMessage')
     const messagesList = document.getElementById('messagesFromWS')
 
+    var app = new Vue({
+      el: '#wsDemo',
+      data() {
+        return {
+          counter: 0,
+          progressValue: 10
+        }
+      },
+      created () {
+        client.addEventListener(('open'), function () {
+          // logout when connected
+          console.info('WebSocket connected')
+        })
+      },
+      mounted () {
+        client.addEventListener( ('message'), (event) => {
+          // this.updateProgressBar(event.data)
+          this.progressValue = event.data
+        })
+      },
+    })
+
     getMessageValue = () => {
       if (message.value){
         return message.value
