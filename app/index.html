@@ -28,26 +28,28 @@
   </main>
 
   <script defer>
+    // WebSocket setup
     const HOST = location.origin.replace(/^http/, 'ws')
     const client = new WebSocket(HOST)
 
+    // Get DOM elements
     const form = document.getElementById("wsForm");
     const message = document.getElementById('websocketMessage')
-    let messagesList = document.getElementById('messagesFromWS')
+    const messagesList = document.getElementById('messagesFromWS')
 
     getMessageValue = () => {
       if (message.value){
         return message.value
       }
     }
+
     updateMessages = (message) => {
       messagesList.innerHTML += `<li>${message}</li>`
     }
 
     document.addEventListener('DOMContentLoaded', () => {
 
-      form.addEventListener("submit", function(event) {
-        event.preventDefault();
+      form.addEventListener("submit", function(event) {        event.preventDefault();
         const messageValue = getMessageValue()
 
         // if message value is not defined or empty, send the message to server
