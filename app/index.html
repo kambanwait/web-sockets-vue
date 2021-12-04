@@ -22,8 +22,7 @@
     </section>
 
     <section>
-      <ul id="messagesFromWS">
-      </ul>
+      <ul id="messagesFromWS"></ul>
     </section>
 
   </main>
@@ -41,7 +40,6 @@
         return message.value
       }
     }
-
     updateMessages = (message) => {
       messagesList.innerHTML += `<li>${message}</li>`
     }
