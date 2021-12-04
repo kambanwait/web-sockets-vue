@@ -77,7 +77,8 @@
 
     document.addEventListener('DOMContentLoaded', () => {
 
-      form.addEventListener("submit", function(event) {        event.preventDefault();
+      form.addEventListener("submit", function(event) {
+        event.preventDefault();
         const messageValue = getMessageValue()
 
         // if message value is not defined or empty, send the message to server
