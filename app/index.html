@@ -25,6 +25,12 @@
       <ul id="messagesFromWS"></ul>
     </section>
 
+    <div id="wsDemo">
+      <progress max="100" v-bind:value="progressValue" > </progress>
+      <br />
+      <p>{{progressValue}} / 100</p>
+    </div>
+
   </main>
 
   <script defer>
