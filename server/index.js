@@ -52,15 +52,15 @@ wsServer.on('connection', webSocket => {
   })
 
   // setup an interval to send random number to attached clients
-  // const interval = setInterval(() => {
-  //   console.info('sending new random number')
-  //   webSocket.send(Math.ceil(Math.random() * 200))
-  // }, 2500)
+  const interval = setInterval(() => {
+    console.info('sending new random number')
+    webSocket.send(Math.ceil(Math.random() * 101))
+  }, 2500)
 
   // when socket closes or disconnects, remove it from the array
   webSocket.on('close', () => {
     console.info(`Closed a client connection: ${webSocket}`)
-    // clearInterval(interval)
+    clearInterval(interval)
     sockets = sockets.filter(s => s !== webSocket)
   })
 
