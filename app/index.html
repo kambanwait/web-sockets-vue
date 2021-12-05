@@ -21,7 +21,6 @@
 </head>
 <body>
 
-    <section>
       <form id="wsForm">
         <label >Start sending messages:
           <input autofocus id="websocketMessage" type="text" class="userInput" >
@@ -29,18 +28,21 @@
         <button type="submit">Send message</button>
   <main class="container mx-auto py-10 px-5">
 
-      </form>
-    </section>
+    <h1 class="text-3xl mb-5">WebSockets & Vue</h1>
+    <hr class="my-10" />
 
-    <section>
-      <ul id="messagesFromWS"></ul>
-    </section>
+    <!-- vue app mounted within #wsDemo -->
+    <section id="wsDemo" class="mb-10">
+
+      </form>
+
 
     <div id="wsDemo">
       <progress max="100" v-bind:value="progressValue" > </progress>
       <br />
       <p>{{progressValue}} / 100</p>
     </div>
+    </section>
 
   </main>
 
