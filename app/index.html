@@ -37,6 +37,14 @@
       </form>
 
 
+      <!-- value is sent from wsServer in to Vue app and auto updated here -->
+      <h2 class="text-xl mb-5">Progress Bar</h2>
+      <p class="mb-2">Values sent from WebSocket server and updated via Vue</p>
+
+      <progress class="shadow-lg" max="100" v-bind:value="progressValue" ></progress>
+      <small class="mb-5 block">{{progressValue}} / 100</small>
+
+      <hr class="my-10"/>
     </section>
 
   </main>
