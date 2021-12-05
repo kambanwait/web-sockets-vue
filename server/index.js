@@ -54,11 +54,24 @@ wsServer.on('connection', webSocket => {
   // setup an interval to send random number to attached clients
   const interval = setInterval(() => {
     // for each connected client, send a random number
-    sockets.forEach(socket => {
-      console.info(`sending new random number to ${sockets.length} client(s)`,)
-      socket.send(Math.ceil(Math.random() * 101))
-    })
-  }, 2500)
+    console.info(`sending new random number to ${sockets.length} client(s)`,)
+
+    webSocket.send(JSON.stringify({
+      event: 'PROGRESS_UPDATE',
+      payload: {
+        value: Math.ceil(Math.random() * 101)
+      }
+    }))
+
+    webSocket.send(JSON.stringify({
+      event: 'CHART_UPDATE',
+      payload: {
+        data: Array.from({ length: 6 }, () => Math.ceil(Math.random() * 100)) // returns array of 6 random numbers
+      }
+    }))
+
+
+  }, 3500)
 
   // when socket closes or disconnects, remove it from the array
   webSocket.on('close', () => {
