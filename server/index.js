@@ -44,7 +44,7 @@ wsServer.on('connection', webSocket => {
       // check out message received is valid
       data = parseMessage(message)
       // send the message content to each connected client
-      sockets.forEach(socket => socket.send(data.payload.msg))
+      sockets.forEach(socket => socket.send(JSON.stringify(data.payload)))
     } catch (err) {
       // provide informative error to front-end
       console.error(`Error: something was wrong with the message object: ${err.message}`)
