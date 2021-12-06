@@ -84,6 +84,20 @@
         this.initChart()
 
         client.addEventListener( ('message'), (event) => {
+          /*
+          * filter event object that's sent to the client and run correct function for each data type sent
+          * */
+          const data = JSON.parse(event.data)
+
+          switch (data.event) {
+            case 'MESSAGE_SENT': this.updateMessages(data.payload.msg)
+              break
+            case 'PROGRESS_UPDATE': this.updateProgressBar(data.payload.value)
+              break
+            case 'CHART_UPDATE': this.updateBarChart(data.payload.data)
+              break
+            default: this.updateProgressBar(0)
+          }
         })
       },
       methods: {
