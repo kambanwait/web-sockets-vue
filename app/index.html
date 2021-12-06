@@ -29,6 +29,13 @@
     <!-- vue app mounted within #wsDemo -->
     <section id="wsDemo" class="mb-10">
 
+      <form @submit.prevent="submitMessage">
+        <label for="websocketMessage" class="block text-sm text-gray-700 sm:w-full md:w-1/3 mb-2">Write your message:</label>
+        <input id="websocketMessage" autocomplete="off" autofocus type="text" v-model="messageCopy"
+                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full md:w-1/3 p-3 text-l text-sm border border-gray-300 rounded-md h-10" />
+        <button type="submit"
+                class="rounded-md bg-gray-800 hover:bg-gray-700 text-white py-2 px-5 w-full md:w-40 my-5">Send
+          message</button>
       </form>
 
       <h3 class="text-lg mb-5">Messages sent from everyone viewing this page:</h3>
