@@ -78,35 +78,12 @@
           this.progressValue = event.data
         })
       },
-    })
-
-    getMessageValue = () => {
-      if (message.value){
-        return message.value
-      }
-    }
-
-    updateMessages = (message) => {
-      messagesList.innerHTML += `<li>${message}</li>`
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-
-      form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        const messageValue = getMessageValue()
-
-        // if message value is not defined or empty, send the message to server
-        if (messageValue !== undefined) {
-          // when connected we send a message to the WebSocket server
-          client.send(JSON.stringify({
-            event: 'MESSAGE_SENT',
-            payload: {
-              msg: messageValue
             }
-          }))
-          // reset input to empty
-          message.value = ''
+          })
+        },
+
+        updateMessages (message) {
+          this.messages.push(message)
         }
       }
     }) // end vue
