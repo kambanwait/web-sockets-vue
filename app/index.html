@@ -54,10 +54,6 @@
     const HOST = location.origin.replace(/^http/, 'ws')
     const client = new WebSocket(HOST)
 
-    // Get DOM elements
-    const form = document.getElementById("wsForm");
-    const message = document.getElementById('websocketMessage')
-    const messagesList = document.getElementById('messagesFromWS')
      const app = new Vue({
       el: '#wsDemo',
       data() {
