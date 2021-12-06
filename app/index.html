@@ -160,6 +160,25 @@
           this.chart.update()
         },
 
+        submitMessage () {
+          const value = this.messageCopy
+
+          // if value is not defined or empty; send the message to server
+          if ( !value ) return
+
+          client.send(
+            JSON.stringify({
+              event: 'MESSAGE_SENT',
+              payload: {
+                msg: value
+              }
+            })
+          )
+
+          // clear messageCopy model to empty input
+          this.messageCopy = ''
+        },
+
         updateMessages (message) {
           this.messages.push(message)
         }
