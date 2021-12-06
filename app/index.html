@@ -63,7 +63,11 @@
       data() {
         return {
           counter: 0,
-          progressValue: 10
+          progressValue: 10,
+          chartData: [0, 0, 0, 0, 0, 0],
+          chart: null,
+          messageCopy: '',
+          messages: []
         }
       },
       created () {
