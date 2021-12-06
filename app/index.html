@@ -31,6 +31,14 @@
 
       </form>
 
+      <h3 class="text-lg mb-5">Messages sent from everyone viewing this page:</h3>
+      <ul id="messagesFromWS" class="mb-5">
+        <li v-for="(message, index) in messages" :key="index" class="mb-2">
+          {{ message }}
+        </li>
+      </ul>
+
+      <hr class="my-10" />
 
       <!-- value is sent from wsServer in to Vue app and auto updated here -->
       <h2 class="text-xl mb-5">Progress Bar</h2>
