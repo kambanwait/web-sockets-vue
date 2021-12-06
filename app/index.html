@@ -108,14 +108,9 @@
           // reset input to empty
           message.value = ''
         }
-      });
+      }
+    }) // end vue
 
-      // WebSocket server sends a message to connected clients
-      // we log received message to console
-      client.addEventListener(('message'), event => {
-        // updateMessages(event.data)
-      })
-    })
   </script>
 
 </body>
