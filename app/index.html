@@ -123,6 +123,14 @@
           this.progressValue = data
         },
 
+        updateBarChart (data) {
+          this.chart.data.datasets.forEach((dataset) => {
+            dataset.data = []
+            dataset.data.push(...data)
+          });
+          this.chart.update()
+        },
+
         updateMessages (message) {
           this.messages.push(message)
         }
