@@ -73,12 +73,14 @@
       },
       mounted () {
         client.addEventListener( ('message'), (event) => {
-          // this.updateProgressBar(event.data)
-          this.progressValue = event.data
         })
       },
             }
           })
+        },
+
+        updateProgressBar (data) {
+          this.progressValue = data
         },
 
         updateMessages (message) {
