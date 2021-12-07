@@ -57,6 +57,15 @@ wsServer.on('connection', webSocket => {
     // for each connected client, send a random number
     console.info(`sending new random number to ${sockets.length} client(s)`,)
 
+    // send info on how many people are connected
+    webSocket.send(JSON.stringify({
+      event: 'STATS_UPDATE',
+      payload: {
+        data: sockets.length
+      }
+    }))
+
+    // send a random number for the progress bar
     webSocket.send(JSON.stringify({
       event: 'PROGRESS_UPDATE',
       payload: {
@@ -64,6 +73,7 @@ wsServer.on('connection', webSocket => {
       }
     }))
 
+    // send array of 6 random numbers for bar graph
     webSocket.send(JSON.stringify({
       event: 'CHART_UPDATE',
       payload: {
@@ -71,7 +81,7 @@ wsServer.on('connection', webSocket => {
       }
     }))
 
-  }, 3500)
+  }, 3000)
 
   // when socket closes or disconnects, remove it from the array
   webSocket.on('close', () => {

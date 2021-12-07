@@ -25,9 +25,11 @@
   <!-- vue app mounted within #wsDemo -->
   <main id="wsDemo" class="container mx-auto py-10 px-5">
 
-    <header>
+    <header class="flex flex-wrap items-center">
       <h1 class="text-3xl">WebSockets & Vue</h1>
-      <hr class="my-10" />
+      <p class="text-xs ml-auto">Clients connected: {{ numberOfClients }}</p>
+      <p class="w-full mt-2">Updates every 3 seconds</p>
+      <hr class="my-10 w-full" />
     </header>
 
     <section class="mb-10">
@@ -91,7 +93,8 @@
           chartData: [0, 0, 0, 0, 0, 0],
           chart: null,
           messageCopy: '',
-          messages: []
+          messages: [],
+          numberOfClients: 0,
         }
       },
       created () {
@@ -116,6 +119,8 @@
             case 'PROGRESS_UPDATE': this.updateProgressBar(data.payload.value)
               break
             case 'CHART_UPDATE': this.updateBarChart(data.payload.data)
+              break
+            case 'STATS_UPDATE': this.updateStats(data.payload.data)
               break
             default: this.updateProgressBar(0)
           }
@@ -160,6 +165,10 @@
               }
             }
           })
+        },
+
+        updateStats (data) {
+          this.numberOfClients = data
         },
 
         updateProgressBar (data) {
