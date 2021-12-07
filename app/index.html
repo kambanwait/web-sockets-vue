@@ -104,8 +104,11 @@
         })
       },
       mounted () {
-        // init chart
-        this.initChart()
+        // init BarChart
+        this.initBarChart()
+
+        // init LinearChart()
+        this.initLinearChart()
 
         client.addEventListener( ('message'), (event) => {
           /*
@@ -127,8 +130,8 @@
         })
       },
       methods: {
-        // initChart to setup ChartJS
-        initChart () {
+        // initBarChart to setup ChartJS
+        initBarChart () {
           this.chart = new Chart(this.$refs['chart'], {
             type: 'bar',
             data: {
@@ -165,6 +168,10 @@
               }
             }
           })
+        },
+
+        initLinearChart () {
+
         },
 
         updateStats (data) {
