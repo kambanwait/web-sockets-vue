@@ -17,3 +17,7 @@ progress::-moz-progress-bar,
 progress::-webkit-progress-value {
   transition: all 250ms ease-in-out;
 }
+
+a {
+  text-decoration: underline;
+}
