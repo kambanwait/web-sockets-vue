@@ -15,3 +15,7 @@ backend to update the front-end with whatever data is sent.
 ### Deployment 
 
 I'm deploying this automatically through GitHub commits to master on to Heroku. 
+
+## Live site
+
+You can visit the site on heroku [here](https://scriptedpixels-web-socket-vue.herokuapp.com)
