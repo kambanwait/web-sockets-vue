@@ -6,11 +6,12 @@ I'm testing how to set up a WebSocket server in node.js and using Vue to listen 
 backend to update the front-end with whatever data is sent.
 
 ### How to run locally
+
 - Clone repo to local directory
-- run `npm install` in both **server** and **app** directories
-- in the server directory: run `node index.js` to start the server for the webhook server
-- in the app directory: open the index.html page (TODO: updates when Vue's used)
+- Run `npm install` in the **root** directory
+- Once this has finished, run `node server/index.js` to start the app
+- Go to **http://localhost:8082** in your browser
 
 ### Deployment 
 
-This is using my GitHub repo and deploying to Heroku with each commit to the main branch.
+I'm deploying this automatically through GitHub commits to master on to Heroku. 
