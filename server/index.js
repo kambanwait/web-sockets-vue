@@ -81,6 +81,14 @@ wsServer.on('connection', webSocket => {
       }
     }))
 
+    // send single datapoint to plot on chart
+    webSocket.send(JSON.stringify({
+      event: 'LINEAR_UPDATE',
+      payload: {
+        data: Math.ceil(Math.random() * 200)
+      }
+    }))
+
   }, 3000)
 
   // when socket closes or disconnects, remove it from the array
