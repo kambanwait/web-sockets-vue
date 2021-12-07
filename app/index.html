@@ -61,6 +61,15 @@
       <canvas ref="chart" id="myChart" class="mb-5"></canvas>
     </section>
 
+    <footer class="container mx-auto pt-5 flex flex-wrap align-center gap-5 md:gap-5">
+      <hr class="my-10 w-full" />
+      <p class="text-xs">&copy; Scripted Pixels Ltd {{ year }} </p>
+      <p class="text-xs md:ml-auto">Built using <a href="https://www.npmjs.com/package/ws" target="_blank">WebSockets</a>, <a
+        href="https://vuejs.org/" target="_blank">Vue</a>,
+        <a href="https://www.chartjs.org/" target="_blank">ChartJS</a> and
+        <a href="https://tailwindcss.com/" target="_blank">tailwindCSS</a></p>
+    </footer>
+
   </main>
 
   <script defer>
@@ -181,6 +190,14 @@
 
         updateMessages (message) {
           this.messages.push(message)
+        }
+      },
+      computed: {
+        // return current year
+        year () {
+          console.log('test')
+          const date = new Date()
+          return date.getFullYear()
         }
       }
     }) // end vue
