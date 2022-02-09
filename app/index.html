@@ -100,15 +100,23 @@
     })
 
     const pointFeatureStyle = new ol.style.Style({
-      image: new ol.style.Circle({
-        radius: 10,
-        stroke: new ol.style.Stroke({
-          color: 'rgba(0, 0, 0 ,1)',
-          width: 1,
-        })
+      image: new ol.style.Icon({
+        src: 'https://openlayers.org/en/v4.6.5/examples/data/icon.png'
       })
     })
 
+    // creates the initial icon on the map
+    const droneIconLayer = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        features: [ pointFeature ]
+      }),
+      style: new ol.style.Style({
+        image: new ol.style.Icon({
+          anchor: [0, 0],
+          src: 'https://openlayers.org/en/v4.6.5/examples/data/icon.png'
+        })
+      })
+    })
 
     const app = new Vue({
       el: '#wsDemo',
@@ -166,11 +174,6 @@
           layers: [
             new ol.layer.Tile({
               source: new ol.source.OSM()
-            }),
-            new ol.layer.Vector({
-              source: new ol.source.Vector({
-                features: [ pointFeature ]
-              })
             })
           ],
           target: 'map',
@@ -179,6 +182,9 @@
             zoom: 15
           })
         })
+
+        map.addLayer(droneIconLayer)
+
       },
       methods: {
         // initBarChart to setup ChartJS
@@ -271,8 +277,8 @@
             this.position.lat
           ]))
 
-          let feature = new ol.Feature(currentPoint);
-          vectorContext.drawFeature(feature, pointFeatureStyle);
+          let feature = new ol.Feature(currentPoint)
+          vectorContext.drawFeature(feature, pointFeatureStyle)
 
           // tell OpenLayers to continue the postcompose animation
           // map.render()
@@ -282,9 +288,10 @@
           this.position.lat = data.lat
           this.position.lon = data.lon
 
-          pointFeature.setStyle(null);
+          // removes the 1st icon on load
+          pointFeature.setStyle(null)
 
-          map.on('postcompose', this.moveFeature);
+          map.on('postcompose', this.moveFeature)
           map.render()
         }
       },
