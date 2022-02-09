@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   <!-- Vue 2 -->
@@ -17,6 +16,10 @@
 
   <!-- custom css -->
   <link href="styles.css" rel="stylesheet" >
+
+  <!-- OpenLayer Styles and JS -->
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+  <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
 
   <title>WebSockets with Vue</title>
 </head>
@@ -52,6 +55,13 @@
         </li>
       </ul>
 
+      <hr class="my-10"/>
+      <section class="mb-10">
+      <p>Lon: {{position.lon}}</p>
+      <p>Lat: {{position.lat}}</p>
+
+      <div id="map" class="map"></div>
+
       <hr class="my-10" />
 
       <!-- value is sent from wsServer in to Vue app and auto updated here -->
@@ -84,7 +94,23 @@
     const HOST = location.origin.replace(/^http/, 'ws')
     const client = new WebSocket(HOST)
 
-     const app = new Vue({
+    let pointFeature = new ol.Feature({
+      type: 'geoMarker',
+      geometry: new ol.geom.Point(ol.proj.fromLonLat([-1.100, 51.381])),
+    })
+
+    const pointFeatureStyle = new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: 10,
+        stroke: new ol.style.Stroke({
+          color: 'rgba(0, 0, 0 ,1)',
+          width: 1,
+        })
+      })
+    })
+
+
+    const app = new Vue({
       el: '#wsDemo',
       data() {
         return {
@@ -95,6 +121,11 @@
           messageCopy: '',
           messages: [],
           numberOfClients: 0,
+          position: {
+            lat: 0.00,
+            lon: 0.00
+          },
+          map: '',
         }
       },
       created () {
@@ -125,8 +156,28 @@
               break
             case 'STATS_UPDATE': this.updateStats(data.payload.data)
               break
+            case 'POSITION_UPDATE': this.updatePosition(data.payload.data)
+              break
             default: this.updateProgressBar(0)
           }
+        })
+
+        map = new ol.Map({
+          layers: [
+            new ol.layer.Tile({
+              source: new ol.source.OSM()
+            }),
+            new ol.layer.Vector({
+              source: new ol.source.Vector({
+                features: [ pointFeature ]
+              })
+            })
+          ],
+          target: 'map',
+          view: new ol.View({
+            center: ol.proj.fromLonLat([-1.1003, 51.381]),
+            zoom: 15
+          })
         })
       },
       methods: {
@@ -211,8 +262,33 @@
 
         updateMessages (message) {
           this.messages.push(message)
+        },
+
+        moveFeature (event) {
+          let vectorContext = event.vectorContext
+          let currentPoint = new ol.geom.Point(ol.proj.fromLonLat([
+            this.position.lon,
+            this.position.lat
+          ]))
+
+          let feature = new ol.Feature(currentPoint);
+          vectorContext.drawFeature(feature, pointFeatureStyle);
+
+          // tell OpenLayers to continue the postcompose animation
+          // map.render()
+        },
+
+        updatePosition (data) {
+          this.position.lat = data.lat
+          this.position.lon = data.lon
+
+          pointFeature.setStyle(null);
+
+          map.on('postcompose', this.moveFeature);
+          map.render()
         }
       },
+
       computed: {
         // return current year
         year () {

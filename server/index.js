@@ -24,6 +24,10 @@ function parseMessage(message) {
   return object
 }
 
+
+function getRandomCoords(min, max) {
+  return Math.random() * (max - min) + min
+}
 // array of connected sockets
 let sockets = []
 
@@ -81,11 +85,13 @@ wsServer.on('connection', webSocket => {
       }
     }))
 
-    // send single datapoint to plot on chart
     webSocket.send(JSON.stringify({
-      event: 'LINEAR_UPDATE',
+      event: 'POSITION_UPDATE',
       payload: {
-        data: Math.ceil(Math.random() * 200)
+        data: {
+          lon: getRandomCoords(-1.1001, -1.1005),
+          lat: getRandomCoords(51.380, 51.385),
+        }
       }
     }))
 
