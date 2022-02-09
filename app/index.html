@@ -69,13 +69,19 @@
       <p class="mb-2">Value sent from WebSocket server</p>
 
       <progress class="shadow-lg" max="100" v-bind:value="progressValue" ></progress>
-      <small class="mb-5 block">{{progressValue}} / 100</small>
+      <small class="mb-5 block">{{ progressValue }} / 100</small>
 
       <hr class="my-10"/>
 
-      <h2 class="text-xl mb-5">ChartJs</h2>
+      <h2 class="text-xl mb-5">ChartJs - Bar chart</h2>
       <p class="mb-2">Values updated from WebSocket server</p>
-      <canvas ref="chart" id="myChart" class="mb-5"></canvas>
+      <canvas ref="barChart" class="mb-5"></canvas>
+
+      <hr class="my-10"/>
+
+      <h2 class="text-xl mb-5">ChartJs - Line chart</h2>
+      <p class="mb-2">Values updated from WebSocket server</p>
+      <canvas ref="lineChart" class="mb-5"></canvas>
     </section>
 
     <footer class="container mx-auto pt-5 flex flex-wrap align-center gap-5">
@@ -89,7 +95,9 @@
 
   </main>
 
-  <script defer>
+  <script defer type="module">
+    import { months } from './Utils.js'
+
     // WebSocket setup
     const HOST = location.origin.replace(/^http/, 'ws')
     const client = new WebSocket(HOST)
@@ -125,7 +133,8 @@
           counter: 0,
           progressValue: 10,
           chartData: [0, 0, 0, 0, 0, 0],
-          chart: null,
+          barChart: null,
+          lineChart: null,
           messageCopy: '',
           messages: [],
           numberOfClients: 0,
@@ -166,6 +175,8 @@
               break
             case 'POSITION_UPDATE': this.updatePosition(data.payload.data)
               break
+            case 'LINEAR_UPDATE': this.updateLineChart(data.payload.data)
+              break
             default: this.updateProgressBar(0)
           }
         })
@@ -189,7 +200,7 @@
       methods: {
         // initBarChart to setup ChartJS
         initBarChart () {
-          this.chart = new Chart(this.$refs['chart'], {
+          this.barChart = new Chart(this.$refs['barChart'], {
             type: 'bar',
             data: {
               labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -228,7 +239,27 @@
         },
 
         initLinearChart () {
+          const labels = months({ count: 6 })
 
+          this.lineChart = new Chart(this.$refs['lineChart'], {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Dataset 1',
+                  data: Array.from({ length: 6 }, () => Math.ceil(Math.random() * 100)) // returns array of 6 random numbers,
+                },
+                {
+                  label: 'Dataset 2',
+                  data: Array.from({ length: 6 }, () => Math.ceil(Math.random() * 100)) // returns array of 6 random numbers,
+                }
+              ]
+            },
+            options: {
+              responsive: true
+            }
+          })
         },
 
         updateStats (data) {
@@ -240,11 +271,19 @@
         },
 
         updateBarChart (data) {
-          this.chart.data.datasets.forEach((dataset) => {
+          this.barChart.data.datasets.forEach((dataset) => {
             dataset.data = []
             dataset.data.push(...data)
           });
-          this.chart.update()
+          this.barChart.update()
+        },
+
+        updateLineChart (newData) {
+          this.lineChart.data.datasets.forEach((dataset, index) => {
+            dataset.data = []
+            dataset.data.push(...newData.datasets[index].data)
+          });
+          this.lineChart.update()
         },
 
         submitMessage () {

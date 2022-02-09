@@ -77,6 +77,25 @@ wsServer.on('connection', webSocket => {
       }
     }))
 
+    // send single datapoint to plot on chart
+    webSocket.send(JSON.stringify({
+      event: 'LINEAR_UPDATE',
+      payload: {
+        data: {
+          datasets: [
+            {
+              label: 'Dataset 1',
+              data: Array.from({ length: 6 }, () => Math.ceil(Math.random() * 100)) // returns array of 6 random numbers,
+            },
+            {
+              label: 'Dataset 2',
+              data: Array.from({ length: 6 }, () => Math.ceil(Math.random() * 100)) // returns array of 6 random numbers,
+            }
+          ]
+        },
+      }
+    }))
+
     // send array of 6 random numbers for bar graph
     webSocket.send(JSON.stringify({
       event: 'CHART_UPDATE',
@@ -95,7 +114,7 @@ wsServer.on('connection', webSocket => {
       }
     }))
 
-  }, 2000)
+  }, 1500)
 
   // when socket closes or disconnects, remove it from the array
   webSocket.on('close', () => {
