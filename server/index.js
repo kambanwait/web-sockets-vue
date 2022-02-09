@@ -95,7 +95,7 @@ wsServer.on('connection', webSocket => {
       }
     }))
 
-  }, 3000)
+  }, 2000)
 
   // when socket closes or disconnects, remove it from the array
   webSocket.on('close', () => {
