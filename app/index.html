@@ -164,6 +164,8 @@
               break
             case 'STATS_UPDATE': this.updateStats(data.payload.data)
               break
+            case 'LONLAT_UPDATE': console.log(data.payload.data);
+              break
             case 'POSITION_UPDATE': this.updatePosition(data.payload.data)
               break
             case 'LINEAR_UPDATE': this.updateLineChart(data.payload.data)
@@ -172,7 +174,7 @@
           }
         })
 
-        map = new ol.Map({
+        this.map = new ol.Map({
           layers: [
             new ol.layer.Tile({
               source: new ol.source.OSM()
@@ -315,8 +317,8 @@
           this.position.lat = data.lat
           this.position.lon = data.lon
 
-          map.on('postcompose', this.moveFeature)
-          map.render()
+          this.map.on('postcompose', this.moveFeature)
+          this.map.render()
         }
       },
 
