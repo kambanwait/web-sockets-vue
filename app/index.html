@@ -21,6 +21,10 @@
   <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
   <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
 
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   <title>WebSockets with Vue</title>
 </head>
 <body>
@@ -108,8 +112,13 @@
     })
 
     const pointFeatureStyle = new ol.style.Style({
-      image: new ol.style.Icon({
-        src: 'https://openlayers.org/en/v4.6.5/examples/data/icon.png'
+      text: new ol.style.Text({
+        fill: new ol.style.Fill({ color: 'rgba(244, 146, 0, .8)' }),
+        stroke: new ol.style.Stroke({ color: 'rgba(255, 255, 255, 1)', width: .5 }),
+        font: "var(--fa-font-solid)",
+        textBaseline: 'bottom',
+        text: "\uf0fb",
+        scale: 2.5,
       })
     })
 
