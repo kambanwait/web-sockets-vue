@@ -60,11 +60,11 @@
       </ul>
 
       <hr class="my-10"/>
-      <section class="mb-10">
-      <p>Lon: {{position.lon}}</p>
-      <p>Lat: {{position.lat}}</p>
+      <h2 class="text-xl mb-5">OpenLayers map update position</h2>
+      <p class="mb-5">Updates the icon on the map with generated LonLat:</p>
+      <p class="mb-2">Lon: {{position.lon}} / Lat: {{position.lat}}</>
 
-      <div id="map" class="map"></div>
+      <div id="map" class="shadow-lg"></div>
 
       <hr class="my-10" />
 
@@ -106,11 +106,6 @@
     const HOST = location.origin.replace(/^http/, 'ws')
     const client = new WebSocket(HOST)
 
-    let pointFeature = new ol.Feature({
-      type: 'geoMarker',
-      geometry: new ol.geom.Point(ol.proj.fromLonLat([-1.100, 51.381])),
-    })
-
     const pointFeatureStyle = new ol.style.Style({
       text: new ol.style.Text({
         fill: new ol.style.Fill({ color: 'rgba(244, 146, 0, .8)' }),
@@ -119,19 +114,6 @@
         textBaseline: 'bottom',
         text: "\uf0fb",
         scale: 2.5,
-      })
-    })
-
-    // creates the initial icon on the map
-    const droneIconLayer = new ol.layer.Vector({
-      source: new ol.source.Vector({
-        features: [ pointFeature ]
-      }),
-      style: new ol.style.Style({
-        image: new ol.style.Icon({
-          anchor: [0, 0],
-          src: 'https://openlayers.org/en/v4.6.5/examples/data/icon.png'
-        })
       })
     })
 
@@ -203,7 +185,7 @@
           })
         })
 
-        map.addLayer(droneIconLayer)
+        // map.addLayer(droneIconLayer)
 
       },
       methods: {
@@ -327,17 +309,11 @@
 
           let feature = new ol.Feature(currentPoint)
           vectorContext.drawFeature(feature, pointFeatureStyle)
-
-          // tell OpenLayers to continue the postcompose animation
-          // map.render()
         },
 
         updatePosition (data) {
           this.position.lat = data.lat
           this.position.lon = data.lon
-
-          // removes the 1st icon on load
-          pointFeature.setStyle(null)
 
           map.on('postcompose', this.moveFeature)
           map.render()
