@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   <!-- Vue 2 -->
@@ -17,6 +16,14 @@
 
   <!-- custom css -->
   <link href="styles.css" rel="stylesheet" >
+
+  <!-- OpenLayer Styles and JS -->
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+  <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <title>WebSockets with Vue</title>
 </head>
@@ -52,6 +59,13 @@
         </li>
       </ul>
 
+      <hr class="my-10"/>
+      <h2 class="text-xl mb-5">OpenLayers map update position</h2>
+      <p class="mb-5">Updates the icon on the map with generated LonLat:</p>
+      <p class="mb-2">Lon: {{position.lon}} / Lat: {{position.lat}}</>
+
+      <div id="map" class="shadow-lg"></div>
+
       <hr class="my-10" />
 
       <!-- value is sent from wsServer in to Vue app and auto updated here -->
@@ -59,13 +73,19 @@
       <p class="mb-2">Value sent from WebSocket server</p>
 
       <progress class="shadow-lg" max="100" v-bind:value="progressValue" ></progress>
-      <small class="mb-5 block">{{progressValue}} / 100</small>
+      <small class="mb-5 block">{{ progressValue }} / 100</small>
 
       <hr class="my-10"/>
 
-      <h2 class="text-xl mb-5">ChartJs</h2>
+      <h2 class="text-xl mb-5">ChartJs - Bar chart</h2>
       <p class="mb-2">Values updated from WebSocket server</p>
-      <canvas ref="chart" id="myChart" class="mb-5"></canvas>
+      <canvas ref="barChart" class="mb-5"></canvas>
+
+      <hr class="my-10"/>
+
+      <h2 class="text-xl mb-5">ChartJs - Line chart</h2>
+      <p class="mb-2">Values updated from WebSocket server</p>
+      <canvas ref="lineChart" class="mb-5"></canvas>
     </section>
 
     <footer class="container mx-auto pt-5 flex flex-wrap align-center gap-5">
@@ -79,22 +99,41 @@
 
   </main>
 
-  <script defer>
+  <script defer type="module">
+    import { months } from './Utils.js'
+
     // WebSocket setup
     const HOST = location.origin.replace(/^http/, 'ws')
     const client = new WebSocket(HOST)
 
-     const app = new Vue({
+    const pointFeatureStyle = new ol.style.Style({
+      text: new ol.style.Text({
+        fill: new ol.style.Fill({ color: 'rgba(244, 146, 0, .8)' }),
+        stroke: new ol.style.Stroke({ color: 'rgba(255, 255, 255, 1)', width: .5 }),
+        font: "var(--fa-font-solid)",
+        textBaseline: 'bottom',
+        text: "\uf0fb",
+        scale: 2.5,
+      })
+    })
+
+    const app = new Vue({
       el: '#wsDemo',
       data() {
         return {
           counter: 0,
           progressValue: 10,
           chartData: [0, 0, 0, 0, 0, 0],
-          chart: null,
+          barChart: null,
+          lineChart: null,
           messageCopy: '',
           messages: [],
           numberOfClients: 0,
+          position: {
+            lat: 0.00,
+            lon: 0.00
+          },
+          map: '',
         }
       },
       created () {
@@ -104,8 +143,11 @@
         })
       },
       mounted () {
-        // init chart
-        this.initChart()
+        // init BarChart
+        this.initBarChart()
+
+        // init LinearChart()
+        this.initLinearChart()
 
         client.addEventListener( ('message'), (event) => {
           /*
@@ -122,14 +164,36 @@
               break
             case 'STATS_UPDATE': this.updateStats(data.payload.data)
               break
+            case 'LONLAT_UPDATE': console.log(data.payload.data);
+              break
+            case 'POSITION_UPDATE': this.updatePosition(data.payload.data)
+              break
+            case 'LINEAR_UPDATE': this.updateLineChart(data.payload.data)
+              break
             default: this.updateProgressBar(0)
           }
         })
+
+        this.map = new ol.Map({
+          layers: [
+            new ol.layer.Tile({
+              source: new ol.source.OSM()
+            })
+          ],
+          target: 'map',
+          view: new ol.View({
+            center: ol.proj.fromLonLat([-1.1003, 51.381]),
+            zoom: 15
+          })
+        })
+
+        // map.addLayer(droneIconLayer)
+
       },
       methods: {
-        // initChart to setup ChartJS
-        initChart () {
-          this.chart = new Chart(this.$refs['chart'], {
+        // initBarChart to setup ChartJS
+        initBarChart () {
+          this.barChart = new Chart(this.$refs['barChart'], {
             type: 'bar',
             data: {
               labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -167,6 +231,32 @@
           })
         },
 
+        initLinearChart () {
+          const labels = months({ count: 6 })
+
+          this.lineChart = new Chart(this.$refs['lineChart'], {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Dataset 1',
+                  data: Array.from({ length: 6 }, () => Math.ceil(Math.random() * 100)), // returns array of 6 random numbers,
+                  borderColor: 'rgba(75, 192, 192, 0.5)',
+                },
+                {
+                  label: 'Dataset 2',
+                  data: Array.from({ length: 6 }, () => Math.ceil(Math.random() * 100)), // returns array of 6 random numbers,
+                  borderColor: 'rgba(100, 80, 20, 0.5)',
+                }
+              ]
+            },
+            options: {
+              responsive: true
+            }
+          })
+        },
+
         updateStats (data) {
           this.numberOfClients = data
         },
@@ -176,11 +266,19 @@
         },
 
         updateBarChart (data) {
-          this.chart.data.datasets.forEach((dataset) => {
+          this.barChart.data.datasets.forEach((dataset) => {
             dataset.data = []
             dataset.data.push(...data)
           });
-          this.chart.update()
+          this.barChart.update()
+        },
+
+        updateLineChart (newData) {
+          this.lineChart.data.datasets.forEach((dataset, index) => {
+            dataset.data = []
+            dataset.data.push(...newData.datasets[index].data)
+          });
+          this.lineChart.update()
         },
 
         submitMessage () {
@@ -204,8 +302,28 @@
 
         updateMessages (message) {
           this.messages.push(message)
+        },
+
+        moveFeature (event) {
+          let vectorContext = event.vectorContext
+          let currentPoint = new ol.geom.Point(ol.proj.fromLonLat([
+            this.position.lon,
+            this.position.lat
+          ]))
+
+          let feature = new ol.Feature(currentPoint)
+          vectorContext.drawFeature(feature, pointFeatureStyle)
+        },
+
+        updatePosition (data) {
+          this.position.lat = data.lat
+          this.position.lon = data.lon
+
+          this.map.on('postcompose', this.moveFeature)
+          this.map.render()
         }
       },
+
       computed: {
         // return current year
         year () {
