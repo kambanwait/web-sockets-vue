@@ -17,5 +17,4 @@ I'm deploying this automatically through GitHub to Heroku, when committing to my
 
 
 ## Live site
-
-You can visit the site on heroku [here](https://scriptedpixels-web-socket-vue.herokuapp.com)
+~~You can visit the site on heroku [here](https://scriptedpixels-web-socket-vue.herokuapp.com)~~
